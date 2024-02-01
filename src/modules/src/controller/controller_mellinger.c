@@ -136,7 +136,7 @@ void controllerMellinger(controllerMellinger_t* self, control_t *control, const 
     return;
   }
 
-  dt = (float)(1.0f/ATTITUDE_RATE);
+  dt = (float)(1.0f/ATTITUDE_RATE); //defined in stabilizer_types.h, 500Hz
   struct vec setpointPos = mkvec(setpoint->position.x, setpoint->position.y, setpoint->position.z);
   struct vec setpointVel = mkvec(setpoint->velocity.x, setpoint->velocity.y, setpoint->velocity.z);
   struct vec statePos = mkvec(state->position.x, state->position.y, state->position.z);
@@ -164,7 +164,7 @@ void controllerMellinger(controllerMellinger_t* self, control_t *control, const 
     target_thrust.y = self->mass * setpoint->acceleration.y                       + self->kp_xy * r_error.y + self->kd_xy * v_error.y + self->ki_xy * self->i_error_y;
     target_thrust.z = self->mass * (setpoint->acceleration.z + GRAVITY_MAGNITUDE) + self->kp_z  * r_error.z + self->kd_z  * v_error.z + self->ki_z  * self->i_error_z;
   } else {
-    target_thrust.x = -sinf(radians(setpoint->attitude.pitch));
+    target_thrust.x = -sinf(radians(setpoint->attitude.pitch)); // sinf: returns float of sin, radians: convert angle to radians.
     target_thrust.y = -sinf(radians(setpoint->attitude.roll));
     // In case of a timeout, the commander tries to level, ie. x/y are disabled, but z will use the previous setting
     // In that case we ignore the last feedforward term for acceleration
