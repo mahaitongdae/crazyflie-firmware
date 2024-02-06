@@ -5,6 +5,24 @@
         "**/bower_components": true
     },
     "files.associations": {
-        "bootloader.h": "c"
+        "bootloader.h": "c",
+        "controller_indi.h": "c",
+        "autoconf.h": "c",
+        "controller_mellinger.h": "c",
+        "controller_nn.h": "c",
+        "*.ipp": "c",
+        "*.tcc": "c",
+        "bitset": "c",
+        "list": "c",
+        "unordered_map": "c",
+        "unordered_set": "c",
+        "fstream": "c",
+        "istream": "c",
+        "ostream": "c",
+        "streambuf": "c",
+        "functional": "c",
+        "stabilizer_types.h": "c",
+        "math3d.h": "c",
+        "math.h": "c"
     }
 }

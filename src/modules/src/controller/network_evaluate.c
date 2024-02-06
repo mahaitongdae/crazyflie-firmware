@@ -1,4 +1,4 @@
-
+#include "stabilizer_types.h"
 #include "network_evaluate.h"
 
 
@@ -13,14 +13,25 @@ float sigmoid(float num) {
 	return 1 / (1 + exp(-num));
 }
 
-
-
 float relu(float num) {
 	if (num > 0) {
 		return num;
 	} else {
 		return 0;
 	}
+}
+
+// range of action -1 ... 1, need to scale to range 0 .. 1
+float scale(float v) {
+	return 0.5f * (v + 1);
+}
+
+
+
+float clip(float v, float min, float max) {
+	if (v < min) return min;
+	if (v > max) return max;
+	return v;
 }
 
 static const int structure[3][2] = {{18, 64},{64, 64},{64, 4}};
@@ -34,7 +45,7 @@ static const float layer_0_bias[64] = {-0.1863851,-0.08252947,0.073316015,-0.037
 static const float layer_1_bias[64] = {-0.020201096,-0.0023587928,-0.03765536,0.004532457,-0.004201333,-0.008894401,-0.017840482,-0.0049481965,-0.005188617,0.024555704,0.012616394,-0.024249395,0.0044323867,0.043051574,0.0024032132,0.02151973,-0.006842038,0.08004404,-0.06702867,-0.042316187,-0.24567269,0.06035035,-0.08545079,-0.079709895,-0.07669644,0.03867815,0.036606967,0.34023806,0.051478226,-0.001332049,-0.16469276,-0.018612977,-0.016801085,0.0049945093,-0.010281395,0.039524578,0.098827615,-0.056386888,0.028944638,-0.0015150546,-0.013225315,0.07584186,0.012223491,-0.1973501,-0.029647822,-0.32884043,0.08397789,0.06427376,-0.038022466,-0.04018375,0.04299975,-0.07639229,-0.11493729,-0.07345244,-0.023547417,-0.1205389,0.009321877,-0.07944061,-0.07599491,-0.039874755,-0.025018092,0.20429544,-0.013358796,-0.023493962};
 static const float layer_2_bias[4] = {-0.01251776,-0.037491553,-0.048874404,-0.006305442};
 
-	void networkEvaluate(struct control_t_n *control_n, const float *state_array) {
+	void networkEvaluate(control_t *control, const float *state_array) {
 	
 		for (int i = 0; i < structure[0][1]; i++) {
 			output_0[i] = 0;
@@ -62,10 +73,10 @@ static const float layer_2_bias[4] = {-0.01251776,-0.037491553,-0.048874404,-0.0
 			output_2[i] += layer_2_bias[i];
 		}
 		
-		control_n->thrust_0 = output_2[0];
-		control_n->thrust_1 = output_2[1];
-		control_n->thrust_2 = output_2[2];
-		control_n->thrust_3 = output_2[3];	
+		control->normalizedForces[0] = clip(scale(output_2[0]), 0.0, 1.0);
+		control->normalizedForces[1] = clip(scale(output_2[0]), 0.0, 1.0);
+		control->normalizedForces[2] = clip(scale(output_2[0]), 0.0, 1.0);
+		control->normalizedForces[3] = clip(scale(output_2[0]), 0.0, 1.0);
 	
 	}
 	

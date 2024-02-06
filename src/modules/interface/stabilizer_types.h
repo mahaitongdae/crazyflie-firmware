@@ -221,6 +221,14 @@ typedef struct control_s {
   control_mode_t controlMode;
 } control_t;
 
+typedef struct control_t_n {
+	float thrust_0; 
+	float thrust_1;
+	float thrust_2;
+	float thrust_3;	
+} control_t_n;
+//TODO: remove after verifying no need to transfer to PWM.
+
 typedef union {
   int32_t list[STABILIZER_NR_OF_MOTORS];
   struct {

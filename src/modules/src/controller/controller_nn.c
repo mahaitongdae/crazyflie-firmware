@@ -70,7 +70,7 @@ void controllerNN(control_t *control,
 				  const state_t *state, 
 				  const uint32_t tick)
 {
-	control->enableDirectThrust = true;
+	control->controlMode = controlModeForce;
 	if (!RATE_DO_EXECUTE(/*RATE_100_HZ*/freq, tick)) {
 		return;
 	}
@@ -114,8 +114,8 @@ void controllerNN(control_t *control,
 
 	if (relXYZ) {
 		// rotate pos and vel
-		struct vec rot_pos = mvmult(mtranspose(rot), mkvec(state_array[0], state_array[1], state_array[2]));
-		struct vec rot_vel = mvmult(mtranspose(rot), mkvec(state_array[3], state_array[4], state_array[5]));
+		struct vec rot_pos = mvmul(mtranspose(rot), mkvec(state_array[0], state_array[1], state_array[2]));
+		struct vec rot_vel = mvmul(mtranspose(rot), mkvec(state_array[3], state_array[4], state_array[5]));
 
 		state_array[0] = rot_pos.x;
 		state_array[1] = rot_pos.y;
@@ -143,25 +143,26 @@ void controllerNN(control_t *control,
 
 	// run the neural neural network
 	uint64_t start = usecTimestamp();
-	networkEvaluate(&control_n, state_array);
+	networkEvaluate(&control, state_array);
 	usec_eval = (uint32_t) (usecTimestamp() - start);
+
 
 	// convert thrusts to directly to PWM
 	// need to hack the firmware (stablizer.c and power_distribution_stock.c)
-	int PWM_0, PWM_1, PWM_2, PWM_3; 
-	thrusts2PWM(&control_n, &PWM_0, &PWM_1, &PWM_2, &PWM_3);
+	// int PWM_0, PWM_1, PWM_2, PWM_3; 
+	// thrusts2PWM(&control_n, &PWM_0, &PWM_1, &PWM_2, &PWM_3);
 
-	if (setpoint->mode.z == modeDisable) {
-		control->motorRatios[0] = 0;
-		control->motorRatios[1] = 0;
-		control->motorRatios[2] = 0;
-		control->motorRatios[3] = 0;
-	} else {
-		control->motorRatios[0] = PWM_0;
-		control->motorRatios[1] = PWM_1;
-		control->motorRatios[2] = PWM_2;
-		control->motorRatios[3] = PWM_3;
-	}
+	// if (setpoint->mode.z == modeDisable) {
+	// 	control->motorRatios[0] = 0;
+	// 	control->motorRatios[1] = 0;
+	// 	control->motorRatios[2] = 0;
+	// 	control->motorRatios[3] = 0;
+	// } else {
+	// 	control->motorRatios[0] = PWM_0;
+	// 	control->motorRatios[1] = PWM_1;
+	// 	control->motorRatios[2] = PWM_2;
+	// 	control->motorRatios[3] = PWM_3;
+	// }
 }
 
 

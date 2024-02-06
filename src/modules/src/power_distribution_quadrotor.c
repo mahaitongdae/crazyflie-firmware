@@ -114,7 +114,9 @@ static void powerDistributionForceTorque(const control_t *control, motors_thrust
 }
 
 static void powerDistributionForce(const control_t *control, motors_thrust_uncapped_t* motorThrustUncapped) {
-  // Not implemented yet
+  for (int motorIndex = 0; motorIndex < STABILIZER_NR_OF_MOTORS; motorIndex++){
+    motorThrustUncapped->list[motorIndex] = UINT16_MAX * control->normalizedForces[motorIndex];
+  } // but this means we directly get PWM signals from training
 }
 
 void powerDistribution(const control_t *control, motors_thrust_uncapped_t* motorThrustUncapped)
