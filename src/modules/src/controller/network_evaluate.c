@@ -1,13 +1,9 @@
 #include "stabilizer_types.h"
 #include "network_evaluate.h"
 
-
-
 float linear(float num) {
 	return num;
 }
-
-
 
 float sigmoid(float num) {
 	return 1 / (1 + exp(-num));
@@ -25,8 +21,6 @@ float relu(float num) {
 float scale(float v) {
 	return 0.5f * (v + 1);
 }
-
-
 
 float clip(float v, float min, float max) {
 	if (v < min) return min;

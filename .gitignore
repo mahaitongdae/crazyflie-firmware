@@ -20,6 +20,8 @@ cffirmware.py
 /flapper.*
 *.gch
 
+.idea
+
 current_platform.mk
 
 /generated/**

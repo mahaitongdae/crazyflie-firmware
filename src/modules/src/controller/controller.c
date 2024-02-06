@@ -8,7 +8,6 @@
 #include "controller_indi.h"
 #include "controller_brescianini.h"
 #include "controller_nn.h"
-
 #include "autoconf.h"
 
 #define DEFAULT_CONTROLLER ControllerTypePID

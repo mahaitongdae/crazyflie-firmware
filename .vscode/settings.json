@@ -23,6 +23,10 @@
         "functional": "c",
         "stabilizer_types.h": "c",
         "math3d.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "network_evaluate.h": "c",
+        "controller_pid.h": "c",
+        "debug.h": "c",
+        "log.h": "c"
     }
 }
