@@ -68,9 +68,9 @@ static const float layer_2_bias[4] = {-0.01251776,-0.037491553,-0.048874404,-0.0
 		}
 		
 		control->normalizedForces[0] = clip(scale(output_2[0]), 0.0, 1.0);
-		control->normalizedForces[1] = clip(scale(output_2[0]), 0.0, 1.0);
-		control->normalizedForces[2] = clip(scale(output_2[0]), 0.0, 1.0);
-		control->normalizedForces[3] = clip(scale(output_2[0]), 0.0, 1.0);
+		control->normalizedForces[1] = clip(scale(output_2[1]), 0.0, 1.0);
+		control->normalizedForces[2] = clip(scale(output_2[2]), 0.0, 1.0);
+		control->normalizedForces[3] = clip(scale(output_2[3]), 0.0, 1.0);
 	
 	}
 	
