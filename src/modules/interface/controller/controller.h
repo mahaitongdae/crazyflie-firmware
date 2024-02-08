@@ -34,6 +34,7 @@ typedef enum {
   ControllerTypeMellinger,
   ControllerTypeINDI,
   ControllerTypeBrescianini,
+  ControllerTypeNN,
 #ifdef CONFIG_CONTROLLER_OOT
   ControllerTypeOot,
 #endif
