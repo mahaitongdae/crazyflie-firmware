@@ -248,7 +248,14 @@ static void logCapWarning(const bool isCapped) {
 
 static void controlMotors(const control_t* control) {
   powerDistribution(control, &motorThrustUncapped);
+  // if (control->controlMode == controlModeForce){
+  //   for (int motor = 0; motor < STABILIZER_NR_OF_MOTORS; motor++)
+  //     {
+  //       motorThrustBatCompUncapped.list[motor] = motorThrustUncapped.list[motor]; //leave comp to power distribution
+  //     }
+  // } else {
   batteryCompensation(&motorThrustUncapped, &motorThrustBatCompUncapped);
+  // }
   const bool isCapped = powerDistributionCap(&motorThrustBatCompUncapped, &motorPwm);
   logCapWarning(isCapped);
   setMotorRatios(&motorPwm);
@@ -841,3 +848,14 @@ LOG_ADD(LOG_INT32, m3req, &motorThrustBatCompUncapped.motors.m3)
  */
 LOG_ADD(LOG_INT32, m4req, &motorThrustBatCompUncapped.motors.m4)
 LOG_GROUP_STOP(motor)
+
+
+LOG_GROUP_START(ctrlMode)
+LOG_ADD(LOG_INT8, x, &setpoint.mode.x)
+LOG_ADD(LOG_INT8, y, &setpoint.mode.y)
+LOG_ADD(LOG_INT8, z, &setpoint.mode.z)
+LOG_ADD(LOG_INT8, roll, &setpoint.mode.roll)
+LOG_ADD(LOG_INT8, pitch, &setpoint.mode.pitch)
+LOG_ADD(LOG_INT8, yaw, &setpoint.mode.yaw)
+LOG_ADD(LOG_INT8, quat, &setpoint.mode.quat)
+LOG_GROUP_STOP(ctrlMode)

@@ -29,11 +29,13 @@
 #include <string.h>
 #include "log.h"
 #include "param.h"
+#include "pm.h"
 #include "num.h"
 #include "autoconf.h"
 #include "config.h"
 #include "math.h"
 #include "platform_defaults.h"
+#include "math3d.h"
 
 #ifndef CONFIG_MOTORS_DEFAULT_IDLE_THRUST
 #  define DEFAULT_IDLE_THRUST 0
@@ -47,7 +49,7 @@ static float thrustToTorque = 0.005964552f;
 
 // thrust = a * pwm^2 + b * pwm
 static float pwmToThrustA = 0.091492681f;
-static float pwmToThrustB = 0.067673604f;
+static float pwmToThrustB = 0.067673604f; // The sysID parameters correspondes to N, not g.
 
 int powerDistributionMotorType(uint32_t id)
 {
@@ -114,9 +116,28 @@ static void powerDistributionForceTorque(const control_t *control, motors_thrust
 }
 
 static void powerDistributionForce(const control_t *control, motors_thrust_uncapped_t* motorThrustUncapped) {
-  for (int motorIndex = 0; motorIndex < STABILIZER_NR_OF_MOTORS; motorIndex++){
-    motorThrustUncapped->list[motorIndex] = UINT16_MAX * control->normalizedForces[motorIndex];
-  } // but this means we directly get PWM signals from training
+  // for (int motorIndex = 0; motorIndex < STABILIZER_NR_OF_MOTORS; motorIndex++) {
+  //   float motorForce = control->normalizedForces[motorIndex] * 0.065f; //TODO:temp number
+  //   if (motorForce < 0.0f) {
+  //     motorForce = 0.0f;
+  //   }
+  //   // pwm = 0.5 + 0.12fˆ− 0.41ˆv − 0.002fˆ2 − 0.043fˆv, from https://whoenig.github.io/publications/2021_T-RO_Shi.pdf
+  //   float supplyvoltage = pmGetBatteryVoltage();
+  //   float motor_pwm = 0.5f + 0.12f * motorForce - 0.41f * supplyvoltage - 0.002f * motorForce * motorForce - 0.043f * motorForce * supplyvoltage;
+  //   motor_pwm = clamp(motor_pwm, 0.0, 1.0);
+  //   motorThrustUncapped->list[motorIndex] = motor_pwm * UINT16_MAX;
+  // }
+  float motorForceMax = pwmToThrustA + pwmToThrustB;
+  for (int motorIndex = 0; motorIndex < STABILIZER_NR_OF_MOTORS; motorIndex++) {
+    
+    float motorForce = control->normalizedForces[motorIndex] * motorForceMax;
+    if (motorForce < 0.0f) {
+      motorForce = 0.0f;
+    }
+
+    float motor_pwm = (-pwmToThrustB + sqrtf(pwmToThrustB * pwmToThrustB + 4.0f * pwmToThrustA * motorForce)) / (2.0f * pwmToThrustA);
+    motorThrustUncapped->list[motorIndex] = motor_pwm * UINT16_MAX;
+  }
 }
 
 void powerDistribution(const control_t *control, motors_thrust_uncapped_t* motorThrustUncapped)

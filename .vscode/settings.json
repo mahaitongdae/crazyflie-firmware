@@ -27,6 +27,7 @@
         "network_evaluate.h": "c",
         "controller_pid.h": "c",
         "debug.h": "c",
-        "log.h": "c"
+        "log.h": "c",
+        "platform_defaults.h": "c"
     }
 }

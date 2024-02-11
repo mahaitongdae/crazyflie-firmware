@@ -128,6 +128,13 @@ void controllerNN(control_t *control,
 	networkEvaluate(control, state_array);
 	usec_eval = (uint32_t) (usecTimestamp() - start);
 
+	if (setpoint->mode.z == modeDisable) {
+		control->normalizedForces[0] = 0.0f;
+		control->normalizedForces[1] = 0.0f;
+		control->normalizedForces[2] = 0.0f;
+		control->normalizedForces[3] = 0.0f;
+	}
+
 
 	// convert thrusts to directly to PWM
 	// need to hack the firmware (stablizer.c and power_distribution_stock.c)
