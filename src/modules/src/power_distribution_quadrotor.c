@@ -127,16 +127,21 @@ static void powerDistributionForce(const control_t *control, motors_thrust_uncap
   //   motor_pwm = clamp(motor_pwm, 0.0, 1.0);
   //   motorThrustUncapped->list[motorIndex] = motor_pwm * UINT16_MAX;
   // }
-  float motorForceMax = pwmToThrustA + pwmToThrustB;
-  for (int motorIndex = 0; motorIndex < STABILIZER_NR_OF_MOTORS; motorIndex++) {
-    
-    float motorForce = control->normalizedForces[motorIndex] * motorForceMax;
-    if (motorForce < 0.0f) {
-      motorForce = 0.0f;
-    }
 
-    float motor_pwm = (-pwmToThrustB + sqrtf(pwmToThrustB * pwmToThrustB + 4.0f * pwmToThrustA * motorForce)) / (2.0f * pwmToThrustA);
-    motorThrustUncapped->list[motorIndex] = motor_pwm * UINT16_MAX;
+
+  // float motorForceMax = pwmToThrustA + pwmToThrustB;
+  // for (int motorIndex = 0; motorIndex < STABILIZER_NR_OF_MOTORS; motorIndex++) {
+    
+  //   float motorForce = control->normalizedForces[motorIndex] * motorForceMax;
+  //   if (motorForce < 0.0f) {
+  //     motorForce = 0.0f;
+  //   }
+
+  //   float motor_pwm = (-pwmToThrustB + sqrtf(pwmToThrustB * pwmToThrustB + 4.0f * pwmToThrustA * motorForce)) / (2.0f * pwmToThrustA);
+  //   motorThrustUncapped->list[motorIndex] = motor_pwm * UINT16_MAX;
+  // }
+  for (int motorIndex = 0; motorIndex < STABILIZER_NR_OF_MOTORS; motorIndex++) {
+    motorThrustUncapped->list[motorIndex] = control->normalizedForces[motorIndex] * UINT16_MAX;
   }
 }
 
