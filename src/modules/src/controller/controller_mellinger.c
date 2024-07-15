@@ -222,12 +222,12 @@ void controllerMellinger(controllerMellinger_t* self, control_t *control, const 
   // struct mat33 Rdes = mcolumns(
   //   mkvec(x_axis_desired.x, x_axis_desired.y, x_axis_desired.z),
   //   mkvec(y_axis_desired.x, y_axis_desired.y, y_axis_desired.z),
-  //   mkvec(z_axis_desired.x, z_axis_desired.y, z_axis_desired.z));
+  //   mkvec(self->z_axis_desired.x, self->z_axis_desired.y, self->z_axis_desired.z));
 
   // struct mat33 R_transpose = mtranspose(R);
   // struct mat33 Rdes_transpose = mtranspose(Rdes);
 
-  // struct mat33 eRM = msub(mmult(Rdes_transpose, R), mmult(R_transpose, Rdes));
+  // struct mat33 eRM = msub(mmul(Rdes_transpose, R), mmul(R_transpose, Rdes));
 
   // eR.x = eRM.m[2][1];
   // eR.y = -eRM.m[0][2];
@@ -436,4 +436,9 @@ LOG_ADD(LOG_FLOAT, zdz, &g_self.z_axis_desired.z)
 LOG_ADD(LOG_FLOAT, i_err_x, &g_self.i_error_x)
 LOG_ADD(LOG_FLOAT, i_err_y, &g_self.i_error_y)
 LOG_ADD(LOG_FLOAT, i_err_z, &g_self.i_error_z)
+LOG_ADD(LOG_FLOAT, i_err_mx, &g_self.i_error_m_x)
+LOG_ADD(LOG_FLOAT, i_err_my, &g_self.i_error_m_y)
+LOG_ADD(LOG_FLOAT, i_err_mz, &g_self.i_error_m_z)
+
+
 LOG_GROUP_STOP(ctrlMel)

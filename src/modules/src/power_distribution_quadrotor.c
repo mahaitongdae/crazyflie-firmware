@@ -51,6 +51,7 @@ static float thrustToTorque = 0.005964552f;
 static float pwmToThrustA = 0.091492681f;
 static float pwmToThrustB = 0.067673604f; // The sysID parameters correspondes to N, not g.
 
+
 int powerDistributionMotorType(uint32_t id)
 {
   return 1;
