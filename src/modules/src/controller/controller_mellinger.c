@@ -158,6 +158,10 @@ void controllerMellinger(controllerMellinger_t* self, control_t *control, const 
   self->i_error_y += r_error.y * dt;
   self->i_error_y = clamp(self->i_error_y, -self->i_range_xy, self->i_range_xy);
 
+  self->pos_error_x = r_error.x;
+  self->pos_error_y = r_error.y;
+  self->pos_error_z = r_error.z;
+
   // Desired thrust [F_des]
   if (setpoint->mode.x == modeAbs) {
     target_thrust.x = self->mass * setpoint->acceleration.x                       + self->kp_xy * r_error.x + self->kd_xy * v_error.x + self->ki_xy * self->i_error_x;
@@ -241,9 +245,11 @@ void controllerMellinger(controllerMellinger_t* self, control_t *control, const 
   eR.x = (-1 + 2*fsqr(x) + 2*fsqr(y))*y_axis_desired.z + self->z_axis_desired.y - 2*(x*y_axis_desired.x*z + y*y_axis_desired.y*z - x*y*self->z_axis_desired.x + fsqr(x)*self->z_axis_desired.y + fsqr(z)*self->z_axis_desired.y - y*z*self->z_axis_desired.z) +    2*w*(-(y*y_axis_desired.x) - z*self->z_axis_desired.x + x*(y_axis_desired.y + self->z_axis_desired.z));
   eR.y = x_axis_desired.z - self->z_axis_desired.x - 2*(fsqr(x)*x_axis_desired.z + y*(x_axis_desired.z*y - x_axis_desired.y*z) - (fsqr(y) + fsqr(z))*self->z_axis_desired.x + x*(-(x_axis_desired.x*z) + y*self->z_axis_desired.y + z*self->z_axis_desired.z) + w*(x*x_axis_desired.y + z*self->z_axis_desired.y - y*(x_axis_desired.x + self->z_axis_desired.z)));
   eR.z = y_axis_desired.x - 2*(y*(x*x_axis_desired.x + y*y_axis_desired.x - x*y_axis_desired.y) + w*(x*x_axis_desired.z + y*y_axis_desired.z)) + 2*(-(x_axis_desired.z*y) + w*(x_axis_desired.x + y_axis_desired.y) + x*y_axis_desired.z)*z - 2*y_axis_desired.x*fsqr(z) + x_axis_desired.y*(-1 + 2*fsqr(x) + 2*fsqr(z));
+  // eR is from quat, common eR
 
   // Account for Crazyflie coordinate system
   eR.y = -eR.y;
+  // crazyflie eR
 
   // [ew]
   float err_d_roll = 0;
@@ -270,7 +276,7 @@ void controllerMellinger(controllerMellinger_t* self, control_t *control, const 
   self->i_error_m_x = clamp(self->i_error_m_x, -self->i_range_m_xy, self->i_range_m_xy);
 
   self->i_error_m_y += (-eR.y) * dt;
-  self->i_error_m_y = clamp(self->i_error_m_y, -self->i_range_m_xy, self->i_range_m_xy);
+  self->i_error_m_y = clamp(self->i_error_m_y, -self->i_range_m_xy, self->i_range_m_xy); // crazyflie error y
 
   self->i_error_m_z += (-eR.z) * dt;
   self->i_error_m_z = clamp(self->i_error_m_z, -self->i_range_m_z, self->i_range_m_z);
@@ -433,9 +439,9 @@ LOG_ADD(LOG_FLOAT, accelz, &g_self.accelz)
 LOG_ADD(LOG_FLOAT, zdx, &g_self.z_axis_desired.x)
 LOG_ADD(LOG_FLOAT, zdy, &g_self.z_axis_desired.y)
 LOG_ADD(LOG_FLOAT, zdz, &g_self.z_axis_desired.z)
-LOG_ADD(LOG_FLOAT, i_err_x, &g_self.i_error_x)
-LOG_ADD(LOG_FLOAT, i_err_y, &g_self.i_error_y)
-LOG_ADD(LOG_FLOAT, i_err_z, &g_self.i_error_z)
+LOG_ADD(LOG_FLOAT, pos_error_x, &g_self.pos_error_x)
+LOG_ADD(LOG_FLOAT, pos_error_y, &g_self.pos_error_y)
+LOG_ADD(LOG_FLOAT, pos_error_z, &g_self.pos_error_z)
 LOG_ADD(LOG_FLOAT, i_err_mx, &g_self.i_error_m_x)
 LOG_ADD(LOG_FLOAT, i_err_my, &g_self.i_error_m_y)
 LOG_ADD(LOG_FLOAT, i_err_mz, &g_self.i_error_m_z)

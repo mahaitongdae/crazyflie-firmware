@@ -28,6 +28,8 @@
         "controller_pid.h": "c",
         "debug.h": "c",
         "log.h": "c",
-        "platform_defaults.h": "c"
+        "platform_defaults.h": "c",
+        "physicalconstants.h": "c",
+        "position_controller.h": "c"
     }
 }
