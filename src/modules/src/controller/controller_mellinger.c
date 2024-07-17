@@ -158,6 +158,10 @@ void controllerMellinger(controllerMellinger_t* self, control_t *control, const 
   self->i_error_y += r_error.y * dt;
   self->i_error_y = clamp(self->i_error_y, -self->i_range_xy, self->i_range_xy);
 
+  self->pos_error_x = r_error.x;
+  self->pos_error_y = r_error.y;
+  self->pos_error_z = r_error.z;
+
   // Desired thrust [F_des]
   if (setpoint->mode.x == modeAbs) {
     target_thrust.x = self->mass * setpoint->acceleration.x                       + self->kp_xy * r_error.x + self->kd_xy * v_error.x + self->ki_xy * self->i_error_x;
@@ -433,7 +437,12 @@ LOG_ADD(LOG_FLOAT, accelz, &g_self.accelz)
 LOG_ADD(LOG_FLOAT, zdx, &g_self.z_axis_desired.x)
 LOG_ADD(LOG_FLOAT, zdy, &g_self.z_axis_desired.y)
 LOG_ADD(LOG_FLOAT, zdz, &g_self.z_axis_desired.z)
-LOG_ADD(LOG_FLOAT, i_err_x, &g_self.i_error_x)
-LOG_ADD(LOG_FLOAT, i_err_y, &g_self.i_error_y)
-LOG_ADD(LOG_FLOAT, i_err_z, &g_self.i_error_z)
+LOG_ADD(LOG_FLOAT, pos_error_x, &g_self.pos_error_x)
+LOG_ADD(LOG_FLOAT, pos_error_y, &g_self.pos_error_y)
+LOG_ADD(LOG_FLOAT, pos_error_z, &g_self.pos_error_z)
+LOG_ADD(LOG_FLOAT, i_err_mx, &g_self.i_error_m_x)
+LOG_ADD(LOG_FLOAT, i_err_my, &g_self.i_error_m_y)
+LOG_ADD(LOG_FLOAT, i_err_mz, &g_self.i_error_m_z)
+
+
 LOG_GROUP_STOP(ctrlMel)

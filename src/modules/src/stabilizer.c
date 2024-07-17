@@ -841,3 +841,14 @@ LOG_ADD(LOG_INT32, m3req, &motorThrustBatCompUncapped.motors.m3)
  */
 LOG_ADD(LOG_INT32, m4req, &motorThrustBatCompUncapped.motors.m4)
 LOG_GROUP_STOP(motor)
+
+
+LOG_GROUP_START(ctrlMode)
+LOG_ADD(LOG_INT8, x, &setpoint.mode.x)
+LOG_ADD(LOG_INT8, y, &setpoint.mode.y)
+LOG_ADD(LOG_INT8, z, &setpoint.mode.z)
+LOG_ADD(LOG_INT8, roll, &setpoint.mode.roll)
+LOG_ADD(LOG_INT8, pitch, &setpoint.mode.pitch)
+LOG_ADD(LOG_INT8, yaw, &setpoint.mode.yaw)
+LOG_ADD(LOG_INT8, quat, &setpoint.mode.quat)
+LOG_GROUP_STOP(ctrlMode)
